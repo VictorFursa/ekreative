@@ -10,23 +10,32 @@
         </tr>
         </thead>
         <tbody>
-    {% for project in pager.currentPageResults %}
-        <tr>
-            <td>
-                <a href="{{ path('view_project', {'id': project.id|e }) }}">
-                    {{ project.name }}
-                </a>
-            </td>
+        {% for project in pager.currentPageResults %}
+            <tr>
+                <td>
+                    <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                        {{ project.name }}
+                    </a>
+                </td>
 
-            <td>
-                <a class="btn btn-default glyphicon glyphicon-book" title="issue" href="{{ path('project_issues', {'id': project.id|e }) }}"></a>
-            </td>
-            <td>
-                <a class="btn btn-default glyphicon glyphicon-eye-open" title="view"
-                   href="{{ path('view_project', {'id': project.id|e }) }}"></a>
-            </td>
-        </tr>
-    {% endfor %}
+                <td>
+                    <a class="btn btn-default glyphicon glyphicon-book"
+                       title="issue"
+                       href="{{ path('project_issues', {'id': project.id|e }) }}"></a>
+                </td>
+                <td>
+                    <a class="btn btn-default glyphicon glyphicon-eye-open"
+                       title="view"
+                       href="{{ path('view_project', {'id': project.id|e }) }}"></a>
+                    <a class="btn btn-default glyphicon glyphicon-comment"
+                       title="read comment"
+                       href="{{ path('project_comments', {'projectId': project.id|e }) }}"></a>
+                    <a class="btn btn-default glyphicon glyphicon-pencil"
+                       title="add comment"
+                       href="{{ path('add_comment', {'projectId': project.id|e }) }}"></a>
+                </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 

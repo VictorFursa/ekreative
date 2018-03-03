@@ -26,7 +26,8 @@ class ProjectApiAdapter implements AdapterInterface
     {
         if (null === $this->totalCount) {
             $response = $this->client->project->all(['limit' => 1]);
-            $this->totalCount = $response['total_count'];
+
+            return $this->totalCount = $response['total_count'];
         }
 
         return $this->totalCount;

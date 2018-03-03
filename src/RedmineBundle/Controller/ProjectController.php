@@ -2,7 +2,10 @@
 
 namespace RedmineBundle\Controller;
 
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use RedmineBundle\Entity\Comment;
+use RedmineBundle\Form\CommentType;
 use RedmineBundle\Pagination\Adapter\IssueApiAdapter;
 use RedmineBundle\Pagination\Adapter\ProjectApiAdapter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -56,10 +59,14 @@ class ProjectController extends Controller
      */
     public function issuesAction(Request $request, int $id)
     {
-        $page = $request->query->get('page', 1);
         $client = $this->get('redmine.connection')->getClient();
         $project = $client->project->show($id);
 
+        if (false === $project) {
+            return $this->render('@Redmine/error404.html.twig');
+        }
+
+        $page = $request->query->get('page', 1);
         $adapter = new IssueApiAdapter($client, $id);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(5);
@@ -70,4 +77,58 @@ class ProjectController extends Controller
             'project' => $project
         ]);
     }
+
+    /**
+     * @Route("/comments/project/{projectId}", name="project_comments")
+     *
+     * @param int $projectId
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function commentsListAction(Request $request, int $projectId)
+    {
+        $project = $this->get('redmine.connection')->getClient()->project->show($projectId);
+        if (false === $project) {
+            return $this->render('@Redmine/error404.html.twig');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $comments = $em->getRepository(Comment::class)->getCommentsByProject($projectId);
+        $adapter = new DoctrineORMAdapter($comments);
+        $pager = new Pagerfanta($adapter);
+        $page = $request->query->get('page', 1);
+        $pager->setMaxPerPage(10);
+        $pager->setCurrentPage($page);
+
+        return $this->render('@Redmine/Project/comments.html.twig', [
+            'project' => $project,
+            'pager' => $pager,
+        ]);
+    }
+
+    /**
+     * @Route("/add-comment/project/{projectId}", name="add_comment", requirements={"projectId"="\d+"})
+     * @param Request $request
+     * @param int $projectId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function addCommentAction(Request $request, int $projectId)
+    {
+        $comment = new Comment();
+        $comment->setProjectId($projectId);
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+
+            return $this->redirectToRoute('project_comments', ['projectId' => $comment->getProjectId()]);
+        }
+
+        return $this->render('@Redmine/Project/add-comment.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
 }

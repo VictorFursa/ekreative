@@ -19,7 +19,7 @@ class IssueApiAdapter implements AdapterInterface
     public function __construct(Client $client, int $projectId)
     {
         $this->client = $client;
-        $this->projectId;
+        $this->projectId = $projectId;
     }
 
     /**
@@ -32,7 +32,8 @@ class IssueApiAdapter implements AdapterInterface
                 'limit' => 1,
                 'project_id' => $this->projectId
             ]);
-            $this->totalCount = $response['total_count'];
+
+           return $this->totalCount = $response['total_count'];
         }
 
         return $this->totalCount;
