@@ -1,0 +1,29 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %} {{ project.project.name }} {% endblock %}
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Identifier</th>
+            <th>Issue</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                {{ project.project.name }}
+            </td>
+
+            <td>
+                {{ project.project.identifier }}
+            </td>
+
+            <td>
+                <a class="btn btn-default glyphicon glyphicon-book" title="issue"
+                   href="{{ path('project_issues', {'id': project.project.id|e }) }}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

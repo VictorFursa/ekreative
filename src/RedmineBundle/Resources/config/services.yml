@@ -1,0 +1,4 @@
+services:
+    redmine.connection:
+        class: RedmineBundle\Connection
+        arguments: ['%redmine_url%', '%redmine_api_key%']

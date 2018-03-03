@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle;
+namespace RedmineBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AppBundle extends Bundle
+class RedmineBundle extends Bundle
 {
 }

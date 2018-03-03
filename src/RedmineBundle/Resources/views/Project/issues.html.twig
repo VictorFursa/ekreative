@@ -1,0 +1,37 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %} Projects {% endblock %}
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Tracker</th>
+            <th>Priority</th>
+            <th>Author</th>
+            <th>Project</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for issue in pager.currentPageResults %}
+            <tr>
+                <td>
+                    {{ issue.tracker.name }}
+                </td>
+                <td>
+                    {{ issue.priority.name }}
+                </td>
+                <td>
+                    {{ issue.author.name }}
+                </td>
+                <td>
+                    {{ issue.project.name }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center pagerfanta">
+        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+    </div>
+{% endblock %}

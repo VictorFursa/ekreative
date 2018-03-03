@@ -1,0 +1,36 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %} Projects {% endblock %}
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Issue</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% for project in pager.currentPageResults %}
+        <tr>
+            <td>
+                <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                    {{ project.name }}
+                </a>
+            </td>
+
+            <td>
+                <a class="btn btn-default glyphicon glyphicon-book" title="issue" href="{{ path('project_issues', {'id': project.id|e }) }}"></a>
+            </td>
+            <td>
+                <a class="btn btn-default glyphicon glyphicon-eye-open" title="view"
+                   href="{{ path('view_project', {'id': project.id|e }) }}"></a>
+            </td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center pagerfanta">
+        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+    </div>
+{% endblock %}
