@@ -1,0 +1,18 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %}  {% endblock %}
+{% block h3 %} - Issue - {{ issue.issue.id }} {% endblock %}
+{% block content %}
+    <a href="{{ path('project_issues', {'id':  issue.issue.project.id }) }}"> go back </a>
+    <hr>
+    <a class="btn btn-default glyphicon glyphicon-time"
+       title="time-track"
+       href="{{ path('issue_time_track', {'id': issue.issue.id|e }) }}"></a>
+
+    <p><b> spent hours: </b> {{ issue.issue.spent_hours }} </p>
+    <p><b> project: </b> {{ issue.issue.project.name }} </p>
+    <p><b> tracker: </b> {{ issue.issue.tracker.name }} </p>
+    <p><b> status: </b> {{ issue.issue.status.name }} </p>
+    <p><b> priority: </b> {{ issue.issue.priority.name }} </p>
+    <p><b> author: </b> {{ issue.issue.author.name }} </p>
+    <p><b> subject: </b> {{ issue.issue.subject }} </p>
+{% endblock %}

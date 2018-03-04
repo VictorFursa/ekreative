@@ -1,3 +1,4 @@
-app:
-    resource: '@AppBundle/Controller/'
-    type: annotation
+redmine:
+    resource: "@RedmineBundle/Controller/"
+    type:     annotation
+    prefix:   /

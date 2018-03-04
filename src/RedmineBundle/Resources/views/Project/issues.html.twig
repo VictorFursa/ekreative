@@ -1,0 +1,41 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %} Issues {% endblock %}
+{% block h3 %} - Issues {% endblock %}
+{% block content %}
+    {% if pager.getCurrentPageResults() is null %}
+        <div class="alert alert-warning" role="alert">Empty issue</div>
+        <a href="{{ path('project_index') }}"> go back </a>
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Tracker</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Subject</th>
+                <th>Updated</th>
+                <th>Author</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for issue in pager.currentPageResults %}
+                <tr>
+                    <td> <a title="view" href="{{ path('view_issue', {'id': issue.id  }) }}">{{ issue.id }}</a>  </td>
+                    <td> {{ issue.tracker.name }} </td>
+                    <td> {{ issue.status.name }} </td>
+                    <td> {{ issue.priority.name }} </td>
+                    <td> <a title="view" href="{{ path('view_issue', {'id': issue.id  }) }}">{{ issue.subject }}</a>   </td>
+                    <td> {{ issue.updated_on|date }} </td>
+                    <td> {{ issue.author.name }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center pagerfanta">
+            {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+        </div>
+    {% endif %}
+
+{% endblock %}

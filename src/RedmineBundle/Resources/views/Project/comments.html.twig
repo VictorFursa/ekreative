@@ -1,0 +1,13 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %} Comment {% endblock %}
+{% block content %}
+    {% for comment in pager.currentPageResults %}
+        <p class="glyphicon glyphicon-user"> {{ comment.name }}</p>
+        <p>{{ comment.message }}</p>
+        <b class="glyphicon glyphicon-time"> {{ comment.createdAt|date }}</b>
+        <hr>
+    {% endfor %}
+    <div class="pagerfanta">
+        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+    </div>
+{% endblock %}

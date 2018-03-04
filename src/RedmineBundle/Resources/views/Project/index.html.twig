@@ -1,0 +1,65 @@
+{% extends '@Redmine/base.html.twig' %}
+{% block title %} Projects {% endblock %}
+{% block h3 %} - Project {% endblock %}
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Identifier</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Issue</th>
+            <th>Time-track</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for project in pager.currentPageResults %}
+            <tr>
+                <td>
+                    <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                        {{ project.id }}
+                    </a>
+                </td>
+                <td>
+                    {{ project.name }}
+                </td>
+
+                <td>
+                    <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                        {{ project.description }}
+                    </a>
+                </td>
+                <td>
+                    {{ project.identifier }}
+                </td>
+
+                <td>
+                    {{ project.created_on|date }}
+                </td>
+                <td>
+                    {{ project.updated_on|date }}
+                </td>
+
+                <td>
+                    <a class="btn btn-default glyphicon glyphicon-book"
+                       title="issue"
+                       href="{{ path('project_issues', {'id': project.id|e }) }}"></a>
+                </td>
+                <td>
+                    <a class="btn btn-default glyphicon glyphicon-time"
+                       title="time-track"
+                       href="{{ path('project_time_track', {'id': project.id|e }) }}"></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center pagerfanta">
+        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+    </div>
+{% endblock %}
