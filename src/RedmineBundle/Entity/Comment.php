@@ -50,8 +50,6 @@ class Comment
      */
     private $projectId;
 
-
-
     /**
      * Get id
      *

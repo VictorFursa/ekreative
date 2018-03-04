@@ -7,7 +7,6 @@
             <th>Tracker</th>
             <th>Priority</th>
             <th>Author</th>
-            <th>Project</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -24,8 +23,11 @@
                     {{ issue.author.name }}
                 </td>
                 <td>
-                    {{ issue.project.id }}
+                    <a class="btn btn-default glyphicon glyphicon-eye-open"
+                       title="view"
+                       href="{{ path('view_project', {'id': issue.project.id  }) }}"></a>
                 </td>
+
             </tr>
         {% endfor %}
         </tbody>

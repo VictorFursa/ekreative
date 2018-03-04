@@ -10,7 +10,7 @@ class IssueApiAdapter implements AdapterInterface
     /** @var Client */
     private $client;
 
-    /** @var integer */
+    /** @var integer|null */
     private $totalCount;
 
     /** @var integer */
@@ -50,8 +50,21 @@ class IssueApiAdapter implements AdapterInterface
             'limit' => $limit
         ]);
 
+        if (isset($response[0]) && false === $response[0] ) {
+            return null;
+        }
+
         $this->totalCount = $response['total_count'];
 
         return $response['issues'];
+    }
+
+
+    /**
+     * @return int|null
+     */
+    public function getTotalCount()
+    {
+        return $this->totalCount;
     }
 }

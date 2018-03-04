@@ -5,7 +5,9 @@ namespace RedmineBundle\Controller;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use RedmineBundle\Entity\Comment;
+use RedmineBundle\Entity\Tracker;
 use RedmineBundle\Form\CommentType;
+use RedmineBundle\Form\TrackerType;
 use RedmineBundle\Pagination\Adapter\IssueApiAdapter;
 use RedmineBundle\Pagination\Adapter\ProjectApiAdapter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -72,6 +74,12 @@ class ProjectController extends Controller
         $pager->setMaxPerPage(5);
         $pager->setCurrentPage($page);
 
+        if (null === $pager->getCurrentPageResults()) {
+            $this->addFlash("warning", "This issue empty");
+
+            return $this->redirectToRoute('project_index');
+        }
+
         return $this->render('@Redmine/Project/issues.html.twig', [
             'pager' => $pager,
             'project' => $project
@@ -131,4 +139,31 @@ class ProjectController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/track-time/project/{id}", name="project_track_time")
+     *
+     * @param Request $request
+     * @param int $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function trackTimeAction(Request $request, int $id)
+    {
+        $tracker = new Tracker();
+        $form = $this->createForm(TrackerType::class, $tracker);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $client = $this->get('redmine.connection')->getClient();
+            $client->time_entry->create([
+                'project_id' => $id,
+                'hours' => $tracker->getTime(),
+            ]);
+
+            return $this->redirectToRoute('project_index');
+        }
+
+        return $this->render('@Redmine/Project/track-time.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }
