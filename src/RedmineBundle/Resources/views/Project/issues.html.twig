@@ -1,39 +1,39 @@
 {% extends '@Redmine/base.html.twig' %}
 {% block title %} Projects {% endblock %}
 {% block content %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Tracker</th>
-            <th>Priority</th>
-            <th>Author</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for issue in pager.currentPageResults %}
+    {% if pager.getCurrentPageResults() is null %}
+        <div class="alert alert-warning" role="alert">Empty issue</div>
+        <a href="{{ path('project_index') }}"> go back </a>
+    {% else %}
+
+        <table class="table">
+            <thead>
             <tr>
-                <td>
-                    {{ issue.tracker.name }}
-                </td>
-                <td>
-                    {{ issue.priority.name }}
-                </td>
-                <td>
-                    {{ issue.author.name }}
-                </td>
-                <td>
-                    <a class="btn btn-default glyphicon glyphicon-eye-open"
-                       title="view"
-                       href="{{ path('view_project', {'id': issue.project.id  }) }}"></a>
-                </td>
-
+                <th>Tracker</th>
+                <th>Priority</th>
+                <th>Author</th>
+                <th>Actions</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for issue in pager.currentPageResults %}
+                <tr>
+                    <td> {{ issue.tracker.name }} </td>
+                    <td> {{ issue.priority.name }} </td>
+                    <td> {{ issue.author.name }} </td>
+                    <td>
+                        <a class="btn btn-default glyphicon glyphicon-eye-open"
+                           title="view"
+                           href="{{ path('view_project', {'id': issue.project.id  }) }}"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <div class="text-center pagerfanta">
-        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
-    </div>
+        <div class="text-center pagerfanta">
+            {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+        </div>
+    {% endif %}
+
 {% endblock %}

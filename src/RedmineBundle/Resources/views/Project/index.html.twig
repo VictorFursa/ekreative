@@ -33,15 +33,15 @@
 
                     <a class="btn btn-default glyphicon glyphicon-comment"
                        title="read comment"
-                       href="{{ path('project_comments', {'projectId': project.id|e }) }}"></a>
+                       href="{{ path('project_comments', {'id': project.id|e }) }}"></a>
 
                     <a class="btn btn-default glyphicon glyphicon-pencil"
                        title="add comment"
-                       href="{{ path('add_comment', {'projectId': project.id|e }) }}"></a>
+                       href="{{ path('add_comment', {'id': project.id|e }) }}"></a>
 
                     <a class="btn btn-default glyphicon glyphicon-time"
                        title="track-time"
-                       href="{{ path('project_track_time', {'id': project.id|e }) }}"></a>
+                       href="{{ path('project_time_track', {'id': project.id|e }) }}"></a>
                 </td>
             </tr>
         {% endfor %}

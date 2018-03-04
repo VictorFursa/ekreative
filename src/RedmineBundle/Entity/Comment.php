@@ -32,7 +32,7 @@ class Comment
     /**
      * @var string
      *
-     * @ORM\Column(name="message", type="text")
+     * @ORM\Column(name="message", type="text", length=5000)
      */
     private $message;
 
@@ -165,4 +165,3 @@ class Comment
         $this->createdAt = new \DateTime("now");
     }
 }
-

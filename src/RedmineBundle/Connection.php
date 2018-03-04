@@ -19,6 +19,6 @@ class Connection
      */
     public function getClient(): Client
     {
-       return $this->client;
+        return $this->client;
     }
 }

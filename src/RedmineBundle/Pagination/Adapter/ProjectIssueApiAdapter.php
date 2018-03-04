@@ -5,7 +5,7 @@ namespace RedmineBundle\Pagination\Adapter;
 use Pagerfanta\Adapter\AdapterInterface;
 use Redmine\Client;
 
-class IssueApiAdapter implements AdapterInterface
+class ProjectIssueApiAdapter implements AdapterInterface
 {
     /** @var Client */
     private $client;
@@ -33,7 +33,7 @@ class IssueApiAdapter implements AdapterInterface
                 'project_id' => $this->projectId
             ]);
 
-           return $this->totalCount = $response['total_count'];
+            return $this->totalCount = $response['total_count'];
         }
 
         return $this->totalCount;
@@ -50,7 +50,7 @@ class IssueApiAdapter implements AdapterInterface
             'limit' => $limit
         ]);
 
-        if (isset($response[0]) && false === $response[0] ) {
+        if (isset($response[0]) && false === $response[0]) {
             return null;
         }
 

@@ -18,7 +18,7 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('projectId', HiddenType::class )
+            ->add('projectId', HiddenType::class)
             ->add('message', TextareaType::class, ['attr' => ['rows' => 6]])
             ->add('submit', SubmitType::class, ['label' => 'Submit'])
         ;

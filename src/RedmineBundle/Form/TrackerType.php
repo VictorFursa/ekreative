@@ -39,5 +39,4 @@ class TrackerType extends AbstractType
     {
         return 'redminebundle_tracker';
     }
-
 }

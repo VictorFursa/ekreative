@@ -1,6 +1,7 @@
 <?php
 
 namespace RedmineBundle\Entity;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -42,4 +43,3 @@ class Tracker
         return $this->time;
     }
 }
-
