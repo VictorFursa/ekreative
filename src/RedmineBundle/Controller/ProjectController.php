@@ -39,20 +39,30 @@ class ProjectController extends Controller
     /**
      * @Route("/project/{id}", name="view_project", requirements={"id"="\d+"})
      *
+     * @param Request $request
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewAction(int $id)
+    public function viewAction(Request $request, int $id)
     {
         $client = $this->get('redmine.connection')->getClient();
         $project = $client->project->show($id);
 
         if (false === $project) {
-            return $this->render('@Redmine/project-not-found.html.twig');
+            return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
         }
+
+        $em = $this->getDoctrine()->getManager();
+        $comments = $em->getRepository(Comment::class)->getCommentsByProject($id);
+        $adapter = new DoctrineORMAdapter($comments);
+        $pager = new Pagerfanta($adapter);
+        $page = $request->query->get('page', 1);
+        $pager->setMaxPerPage(5);
+        $pager->setCurrentPage($page);
 
         return $this->render('@Redmine/Project/view.html.twig', [
             'project' => $project,
+            'pager' => $pager,
         ]);
     }
 
@@ -69,7 +79,7 @@ class ProjectController extends Controller
         $project = $client->project->show($id);
 
         if (false === $project) {
-            return $this->render('@Redmine/project-not-found.html.twig');
+            return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
         }
 
         $page = $request->query->get('page', 1);
@@ -96,7 +106,7 @@ class ProjectController extends Controller
         $project = $this->get('redmine.connection')->getClient()->project->show($id);
 
         if (false === $project) {
-            return $this->render('@Redmine/project-not-found.html.twig');
+            return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -132,7 +142,7 @@ class ProjectController extends Controller
             $em->persist($comment);
             $em->flush();
 
-            return $this->redirectToRoute('project_comments', ['id' => $id]);
+            return $this->redirectToRoute('view_project', ['id' => $id]);
         }
 
         return $this->render('@Redmine/Project/add-comment.html.twig', [
@@ -164,7 +174,7 @@ class ProjectController extends Controller
             return $this->redirectToRoute('project_index');
         }
 
-        return $this->render('@Redmine/Project/track-time.html.twig', [
+        return $this->render('@Redmine/track-time.html.twig', [
             'form' => $form->createView(),
         ]);
     }

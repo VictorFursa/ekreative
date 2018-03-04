@@ -12,6 +12,6 @@ class SiteController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('RedmineBundle:Site:index.html.twig');
+        return $this->redirectToRoute('project_index');
     }
 }

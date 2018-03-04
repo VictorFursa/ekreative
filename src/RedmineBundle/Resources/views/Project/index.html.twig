@@ -1,24 +1,47 @@
 {% extends '@Redmine/base.html.twig' %}
 {% block title %} Projects {% endblock %}
+{% block h3 %} - Project {% endblock %}
 {% block content %}
-    {% for message in app.flashes('warning') %}
-        <div class="alert alert-warning" role="alert">{{ message }}</div>
-    {% endfor %}
     <table class="table">
         <thead>
         <tr>
+            <th>#</th>
             <th>Name</th>
+            <th>Description</th>
+            <th>Identifier</th>
+            <th>Created</th>
+            <th>Updated</th>
             <th>Issue</th>
-            <th>Action</th>
+            <th>Time-track</th>
         </tr>
         </thead>
         <tbody>
+
         {% for project in pager.currentPageResults %}
             <tr>
                 <td>
                     <a href="{{ path('view_project', {'id': project.id|e }) }}">
-                        {{ project.name }}
+                        {{ project.id }}
                     </a>
+                </td>
+                <td>
+                    {{ project.name }}
+                </td>
+
+                <td>
+                    <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                        {{ project.description }}
+                    </a>
+                </td>
+                <td>
+                    {{ project.identifier }}
+                </td>
+
+                <td>
+                    {{ project.created_on|date }}
+                </td>
+                <td>
+                    {{ project.updated_on|date }}
                 </td>
 
                 <td>
@@ -27,20 +50,8 @@
                        href="{{ path('project_issues', {'id': project.id|e }) }}"></a>
                 </td>
                 <td>
-                    <a class="btn btn-default glyphicon glyphicon-eye-open"
-                       title="view"
-                       href="{{ path('view_project', {'id': project.id|e }) }}"></a>
-
-                    <a class="btn btn-default glyphicon glyphicon-comment"
-                       title="read comment"
-                       href="{{ path('project_comments', {'id': project.id|e }) }}"></a>
-
-                    <a class="btn btn-default glyphicon glyphicon-pencil"
-                       title="add comment"
-                       href="{{ path('add_comment', {'id': project.id|e }) }}"></a>
-
                     <a class="btn btn-default glyphicon glyphicon-time"
-                       title="track-time"
+                       title="time-track"
                        href="{{ path('project_time_track', {'id': project.id|e }) }}"></a>
                 </td>
             </tr>

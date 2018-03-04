@@ -1,6 +1,6 @@
 {% extends '@Redmine/base.html.twig' %}
  {% block  title %} Project not found {% endblock %}
     {% block content %}
-        <div class="alert alert-danger" role="alert">Project not found</div>
+        <div class="alert alert-danger" role="alert">{{ pageName }} not found </div>
         <a href="{{ path('project_index') }}"> go back </a>
     {% endblock %}

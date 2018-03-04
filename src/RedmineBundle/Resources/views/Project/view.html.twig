@@ -1,29 +1,31 @@
 {% extends '@Redmine/base.html.twig' %}
 {% block title %} {{ project.project.name }} {% endblock %}
+{% block h3 %} - Project - {{ project.project.name }} {% endblock %}
 {% block content %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Identifier</th>
-            <th>Issue</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                {{ project.project.name }}
-            </td>
+    <a href="{{ path('project_index') }}"> go back </a>
+    <hr>
+    <b> Description </b>
+    <p>{{ project.project.description }}</p>
+    <b>Custom field</b>
+    <ul>
+        {% for field in project.project.custom_fields %}
+            <li> {{ field.name }} </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <h4>Comments</h4>
+    {% for comment in pager.currentPageResults %}
+        <p class="glyphicon glyphicon-user"> {{ comment.name }}</p>
+        <p>{{ comment.message }}</p>
+        <b class="glyphicon glyphicon-time"> {{ comment.createdAt|date }}</b>
+        <hr>
+    {% endfor %}
 
-            <td>
-                {{ project.project.identifier }}
-            </td>
+    <a class="btn btn-primary"
+       title="time-track"
+       href="{{ path('add_comment', {'id': project.project.id|e }) }}">Add comment</a>
 
-            <td>
-                <a class="btn btn-default glyphicon glyphicon-book" title="issue"
-                   href="{{ path('project_issues', {'id': project.project.id|e }) }}"></a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="pagerfanta">
+        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+    </div>
 {% endblock %}
