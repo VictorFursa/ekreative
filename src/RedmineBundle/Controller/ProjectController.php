@@ -4,6 +4,7 @@ namespace RedmineBundle\Controller;
 
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use RedmineBundle\ApiHelper;
 use RedmineBundle\Entity\Comment;
 use RedmineBundle\Entity\Tracker;
 use RedmineBundle\Form\CommentType;
@@ -37,7 +38,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/project/{id}", name="view_project", requirements={"id"="\d+"})
+     * @Route("/project/{id}", name="project_view", requirements={"id"="\d+"})
      *
      * @param Request $request
      * @param int $id
@@ -45,24 +46,25 @@ class ProjectController extends Controller
      */
     public function viewAction(Request $request, int $id)
     {
-        $client = $this->get('redmine.connection')->getClient();
-        $project = $client->project->show($id);
+        /** @var ApiHelper $apiHelper */
+        $apiHelper = $this->get('redmine.api_helper');
+        $projectDto = $apiHelper->getProjectById($id);
 
-        if (false === $project) {
+        if (!$projectDto) {
             return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
         }
 
         $em = $this->getDoctrine()->getManager();
         $comments = $em->getRepository(Comment::class)->getCommentsByProject($id);
+
         $adapter = new DoctrineORMAdapter($comments);
-        $pager = new Pagerfanta($adapter);
-        $page = $request->query->get('page', 1);
-        $pager->setMaxPerPage(5);
-        $pager->setCurrentPage($page);
+        $projectCommentsPager = new Pagerfanta($adapter);
+        $projectCommentsPager->setMaxPerPage(5);
+        $projectCommentsPager->setCurrentPage($request->query->get('page', 1));
 
         return $this->render('@Redmine/Project/view.html.twig', [
-            'project' => $project,
-            'pager' => $pager,
+            'project' => $projectDto,
+            'projectCommentsPager' => $projectCommentsPager,
         ]);
     }
 
@@ -75,22 +77,23 @@ class ProjectController extends Controller
      */
     public function issueListAction(Request $request, int $id)
     {
-        $client = $this->get('redmine.connection')->getClient();
-        $project = $client->project->show($id);
+        /** @var ApiHelper $apiHelper */
+        $apiHelper = $this->get('redmine.api_helper');
+        $projectDto = $apiHelper->getProjectById($id);
 
-        if (false === $project) {
+        if (!$projectDto) {
             return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
         }
 
         $page = $request->query->get('page', 1);
-        $adapter = new ProjectIssueApiAdapter($client, $id);
+        $adapter = new ProjectIssueApiAdapter($this->get('redmine.connection')->getClient(), $id);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(5);
         $pager->setCurrentPage($page);
 
         return $this->render('@Redmine/Project/issues.html.twig', [
             'pager' => $pager,
-            'project' => $project
+            'project' => $projectDto
         ]);
     }
 
@@ -103,9 +106,11 @@ class ProjectController extends Controller
      */
     public function commentsListAction(Request $request, int $id)
     {
-        $project = $this->get('redmine.connection')->getClient()->project->show($id);
+        /** @var ApiHelper $apiHelper */
+        $apiHelper = $this->get('redmine.api_helper');
+        $projectDto = $apiHelper->getProjectById($id);
 
-        if (false === $project) {
+        if (!$projectDto) {
             return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
         }
 
@@ -118,7 +123,7 @@ class ProjectController extends Controller
         $pager->setCurrentPage($page);
 
         return $this->render('@Redmine/Project/comments.html.twig', [
-            'project' => $project,
+            'project' => $projectDto,
             'pager' => $pager,
         ]);
     }
@@ -132,6 +137,14 @@ class ProjectController extends Controller
      */
     public function addCommentAction(Request $request, int $id)
     {
+        /** @var ApiHelper $apiHelper */
+        $apiHelper = $this->get('redmine.api_helper');
+        $projectDto = $apiHelper->getProjectById($id);
+
+        if (!$projectDto) {
+            return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
+        }
+
         $comment = new Comment();
         $comment->setProjectId($id);
         $form = $this->createForm(CommentType::class, $comment);
@@ -142,11 +155,12 @@ class ProjectController extends Controller
             $em->persist($comment);
             $em->flush();
 
-            return $this->redirectToRoute('view_project', ['id' => $id]);
+            return $this->redirectToRoute('project_view', ['id' => $id]);
         }
 
         return $this->render('@Redmine/Project/add-comment.html.twig', [
             'form' => $form->createView(),
+            'project' => $projectDto
         ]);
     }
 

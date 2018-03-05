@@ -4,6 +4,7 @@ namespace RedmineBundle\Controller;
 
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use RedmineBundle\ApiHelper;
 use RedmineBundle\Entity\Comment;
 use RedmineBundle\Entity\Tracker;
 use RedmineBundle\Form\CommentType;
@@ -26,10 +27,11 @@ class IssueController extends Controller
      */
     public function viewAction(Request $request, int $id)
     {
-        $client = $this->get('redmine.connection')->getClient();
-        $issue = $client->issue->show($id);
+        /** @var ApiHelper $apiHelper */
+        $apiHelper = $this->get('redmine.api_helper');
+        $issueDto = $apiHelper->getIssueById($id);
 
-        if (false === $issue) {
+        if (!$issueDto) {
             return $this->render('@Redmine/page-not-found.html.twig', ['page' => 'Issue']);
         }
 
@@ -42,7 +44,7 @@ class IssueController extends Controller
         $pager->setCurrentPage($page);
 
         return $this->render('@Redmine/Issue/view.html.twig', [
-            'issue' => $issue,
+            'issue' => $issueDto,
             'pager' => $pager,
         ]);
     }

@@ -1,31 +1,70 @@
 {% extends '@Redmine/base.html.twig' %}
-{% block title %} {{ project.project.name }} {% endblock %}
-{% block h3 %} - Project - {{ project.project.name }} {% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('project_index') }}">Projects</a></li>
+    <li class="active">{{ project.name }}</li>
+{% endblock %}
+{% block title %} {{ project.name }} {% endblock %}
 {% block content %}
-    <a href="{{ path('project_index') }}"> go back </a>
-    <hr>
-    <b> Description </b>
-    <p>{{ project.project.description }}</p>
-    <b>Custom field</b>
-    <ul>
-        {% for field in project.project.custom_fields %}
-            <li> {{ field.name }} </li>
-        {% endfor %}
+
+    <div class="row">
+        <h4>{{ project.name }}</h4>
+    </div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#info" aria-controls="info" role="tab" data-toggle="tab">Project information</a>
+        </li>
+        <li role="presentation"><a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">Comments</a></li>
     </ul>
-    <hr>
-    <h4>Comments</h4>
-    {% for comment in pager.currentPageResults %}
-        <p class="glyphicon glyphicon-user"> {{ comment.name }}</p>
-        <p>{{ comment.message }}</p>
-        <b class="glyphicon glyphicon-time"> {{ comment.createdAt|date }}</b>
-        <hr>
-    {% endfor %}
 
-    <a class="btn btn-primary"
-       title="time-track"
-       href="{{ path('add_comment', {'id': project.project.id|e }) }}">Add comment</a>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="info">
+            <div class="row">
+                <div class="col-md-2"><b>Status:</b></div>
+                <div class="col-md-4">{{ project.status }}</div>
+                <div class="col-md-2"><b>Identifier:</b></div>
+                <div class="col-md-4">{{ project.identifier }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"><b>Created on:</b></div>
+                <div class="col-md-4">{{ project.createdOn }}</div>
+                <div class="col-md-2"><b>Updated on:</b></div>
+                <div class="col-md-4">{{ project.updatedOn }}</div>
+            </div>
 
-    <div class="pagerfanta">
-        {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+            <hr>
+            <div class="row">
+                <div class="col-md-2"><b>Description:</b></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">{{ project.description }}</div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="comments">
+            <div class="row">
+                <div class="col-md-12"></div>
+                <div class="col-md-12">
+                    <p>
+                        <a class="btn btn-sm btn-primary pull-right" title="time-track" href="{{ path('add_comment', {'id': project.id|e }) }}">
+                            Add comment
+                        </a>
+                    </p>
+
+                </div>
+                <div class="col-md-12">
+                    {% for comment in projectCommentsPager.currentPageResults %}
+                        <p class="glyphicon glyphicon-user"> {{ comment.name }}</p>
+                        <p>{{ comment.message }}</p>
+                        <b class="glyphicon glyphicon-time"> {{ comment.createdAt|date }}</b>
+                        <hr>
+                    {% endfor %}
+                </div>
+                <div class="pagerfanta col-md-12">
+                    {{ pagerfanta(projectCommentsPager, 'twitter_bootstrap3') }}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

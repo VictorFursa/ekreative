@@ -5,6 +5,7 @@ namespace RedmineBundle\Pagination\Adapter;
 use Pagerfanta\Adapter\AdapterInterface;
 use Redmine\Client;
 use RedmineBundle\Connection;
+use RedmineBundle\Dto\ProjectDto;
 
 class ProjectApiAdapter implements AdapterInterface
 {
@@ -45,6 +46,13 @@ class ProjectApiAdapter implements AdapterInterface
 
         $this->totalCount = $response['total_count'];
 
-        return $response['projects'];
+        $result = [];
+        if (array_key_exists('projects', $response) && is_array($response['projects'])) {
+            foreach ($response['projects'] as $project) {
+                $result[] = new ProjectDto($project);
+            }
+        }
+
+        return $result;
     }
 }

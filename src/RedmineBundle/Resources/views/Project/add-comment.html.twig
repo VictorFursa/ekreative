@@ -1,4 +1,9 @@
 {% extends '@Redmine/base.html.twig' %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('project_index') }}">Projects</a></li>
+    <li><a href="{{ path('project_view', {'id': project.id  }) }}">{{ project.name }}</a></li>
+    <li class="active">Add comment</li>
+{% endblock %}
 {% block title %} Add Comment {% endblock %}
 {% block content %}
     {{ form_start(form) }}

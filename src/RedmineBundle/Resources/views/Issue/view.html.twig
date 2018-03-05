@@ -1,18 +1,57 @@
 {% extends '@Redmine/base.html.twig' %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('project_index') }}">Projects</a></li>
+    <li><a href="{{ path('project_view', {'id':  issue.project.id }) }}">{{ issue.project.name }}</a></li>
+    <li><a href="{{ path('project_issues', {'id':  issue.project.id }) }}">Issues list</a></li>
+    <li class="active">{{ issue.subject }}</li>
+{% endblock %}
 {% block title %}  {% endblock %}
-{% block h3 %} - Issue - {{ issue.issue.id }} {% endblock %}
 {% block content %}
-    <a href="{{ path('project_issues', {'id':  issue.issue.project.id }) }}"> go back </a>
+    <div class="row">
+        <h4>{{ issue.subject }}</h4>
+        <p class="author">
+            Added by <a href="https://redmine.ekreative.com/users/{{ issue.author.id }}">{{ issue.author.name }}</a>
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><b>Status:</b></div>
+        <div class="col-md-4">{{ issue.status.name }}</div>
+        <div class="col-md-2"><b>Start date:</b></div>
+        <div class="col-md-4">{{ issue.startDate|date }}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><b>Priority:</b></div>
+        <div class="col-md-4">{{ issue.priority.name }}</div>
+        <div class="col-md-2"><b>Spend hours:</b></div>
+        <div class="col-md-4">{{ issue.spentHours }}h</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><b>Author:</b></div>
+        <div class="col-md-4">{{ issue.author.name }}</div>
+        <div class="col-md-2"><b>Total spend hours:</b></div>
+        <div class="col-md-4">{{ issue.totalSpentHours }}h</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><b>Created on:</b></div>
+        <div class="col-md-4">{{ issue.createdOn }}</div>
+        <div class="col-md-2"><b>Progress:</b></div>
+        <div class="col-md-4">
+            <div class="progress" style="margin-bottom: 0">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{ issue.doneRatio }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ issue.doneRatio }}%;">
+                    {{ issue.doneRatio }}%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><b>Updated on:</b></div>
+        <div class="col-md-4">{{ issue.updatedOn }}</div>
+    </div>
     <hr>
-    <a class="btn btn-default glyphicon glyphicon-time"
-       title="time-track"
-       href="{{ path('issue_time_track', {'id': issue.issue.id|e }) }}"></a>
-
-    <p><b> spent hours: </b> {{ issue.issue.spent_hours }} </p>
-    <p><b> project: </b> {{ issue.issue.project.name }} </p>
-    <p><b> tracker: </b> {{ issue.issue.tracker.name }} </p>
-    <p><b> status: </b> {{ issue.issue.status.name }} </p>
-    <p><b> priority: </b> {{ issue.issue.priority.name }} </p>
-    <p><b> author: </b> {{ issue.issue.author.name }} </p>
-    <p><b> subject: </b> {{ issue.issue.subject }} </p>
+    <div class="row">
+        <div class="col-md-2"><b>Description:</b></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">{{ issue.description }}</div>
+    </div>
 {% endblock %}

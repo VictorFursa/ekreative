@@ -1,10 +1,13 @@
 {% extends '@Redmine/base.html.twig' %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('project_index') }}">Projects</a></li>
+    <li><a href="{{ path('project_view', {'id': project.id  }) }}">{{ project.name }}</a></li>
+    <li class="active">Issues list</li>
+{% endblock %}
 {% block title %} Issues {% endblock %}
-{% block h3 %} - Issues {% endblock %}
 {% block content %}
     {% if pager.getCurrentPageResults() is null %}
         <div class="alert alert-warning" role="alert">Empty issue</div>
-        <a href="{{ path('project_index') }}"> go back </a>
     {% else %}
         <table class="table">
             <thead>
@@ -26,7 +29,7 @@
                     <td> {{ issue.status.name }} </td>
                     <td> {{ issue.priority.name }} </td>
                     <td> <a title="view" href="{{ path('view_issue', {'id': issue.id  }) }}">{{ issue.subject }}</a>   </td>
-                    <td> {{ issue.updated_on|date }} </td>
+                    <td> {{ issue.updatedOn|date }} </td>
                     <td> {{ issue.author.name }} </td>
                 </tr>
             {% endfor %}

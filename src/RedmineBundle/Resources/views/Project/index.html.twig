@@ -1,6 +1,8 @@
 {% extends '@Redmine/base.html.twig' %}
+{% block breadcrumbs %}
+    <li class="active">Projects</li>
+{% endblock %}
 {% block title %} Projects {% endblock %}
-{% block h3 %} - Project {% endblock %}
 {% block content %}
     <table class="table">
         <thead>
@@ -20,7 +22,7 @@
         {% for project in pager.currentPageResults %}
             <tr>
                 <td>
-                    <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                    <a href="{{ path('project_view', {'id': project.id|e }) }}">
                         {{ project.id }}
                     </a>
                 </td>
@@ -29,7 +31,7 @@
                 </td>
 
                 <td>
-                    <a href="{{ path('view_project', {'id': project.id|e }) }}">
+                    <a href="{{ path('project_view', {'id': project.id|e }) }}">
                         {{ project.description }}
                     </a>
                 </td>
@@ -38,10 +40,10 @@
                 </td>
 
                 <td>
-                    {{ project.created_on|date }}
+                    {{ project.createdOn|date }}
                 </td>
                 <td>
-                    {{ project.updated_on|date }}
+                    {{ project.updatedOn|date }}
                 </td>
 
                 <td>
