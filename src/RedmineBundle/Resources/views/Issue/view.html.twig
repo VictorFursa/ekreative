@@ -46,6 +46,10 @@
     <div class="row">
         <div class="col-md-2"><b>Updated on:</b></div>
         <div class="col-md-4">{{ issue.updatedOn }}</div>
+        <div class="col-md-2"><b>Time</b></div>
+        <div>
+            <a href="{{ path('issue_time_track', {'id': issue.id|e }) }}">Track</a>
+        </div>
     </div>
     <hr>
     <div class="row">

@@ -33,6 +33,12 @@
                 <div class="col-md-2"><b>Updated on:</b></div>
                 <div class="col-md-4">{{ project.updatedOn }}</div>
             </div>
+            <div class="row">
+                <div class="col-md-2"><b>Time</b></div>
+                <div>
+                    <a href="{{ path('project_time_track', {'id': project.id|e }) }}">Track</a>
+                </div>
+            </div>
 
             <hr>
             <div class="row">

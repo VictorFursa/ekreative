@@ -174,6 +174,14 @@ class ProjectController extends Controller
      */
     public function timeTrackAction(Request $request, int $id)
     {
+        /** @var ApiHelper $apiHelper */
+        $apiHelper = $this->get('redmine.api_helper');
+        $projectDto = $apiHelper->getProjectById($id);
+
+        if (!$projectDto) {
+            return $this->render('@Redmine/page-not-found.html.twig', ['pageName' => 'Project']);
+        }
+
         $tracker = new Tracker();
         $form = $this->createForm(TrackerType::class, $tracker);
         $form->handleRequest($request);
@@ -188,8 +196,9 @@ class ProjectController extends Controller
             return $this->redirectToRoute('project_index');
         }
 
-        return $this->render('@Redmine/track-time.html.twig', [
+        return $this->render('@Redmine/Project/track-time.html.twig', [
             'form' => $form->createView(),
+            'project' => $projectDto
         ]);
     }
 }
